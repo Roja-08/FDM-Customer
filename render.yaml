@@ -4,7 +4,10 @@ services:
     env: python
     plan: free
     rootDir: backend
-    buildCommand: pip install --upgrade pip setuptools wheel && pip install -r requirements-simple.txt
+    pythonVersion: 3.11
+    buildCommand: |
+      pip install --upgrade pip setuptools wheel
+      pip install -r requirements-simple.txt
     startCommand: python app.py
     envVars:
       - key: FLASK_ENV
@@ -13,5 +16,3 @@ services:
         value: sqlite:///instance/database.db
       - key: SECRET_KEY
         generateValue: true
-      - key: PYTHON_VERSION
-        value: 3.11.0
