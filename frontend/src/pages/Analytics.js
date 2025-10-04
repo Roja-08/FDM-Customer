@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import config from '../config';
 import { 
   Card, 
   Row, 
@@ -56,8 +57,8 @@ const Analytics = () => {
       setError(null);
 
       const [churnRes, revenueRes] = await Promise.all([
-        axios.get('/api/analytics/charts?type=churn_distribution'),
-        axios.get('/api/analytics/charts?type=revenue_by_risk')
+        axios.get(`${config.getApiUrl()}/api/analytics/charts?type=churn_distribution`),
+        axios.get(`${config.getApiUrl()}/api/analytics/charts?type=revenue_by_risk`)
       ]);
 
       setChartData({

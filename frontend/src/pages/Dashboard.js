@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Card, Spin, Alert, Typography, Space, Tag } from 'antd';
+import config from '../config';
 import { 
   UserOutlined, 
   DollarOutlined, 
@@ -28,9 +29,9 @@ const Dashboard = () => {
     try {
       setLoading(true);
       const [summaryRes, churnRes, revenueRes] = await Promise.all([
-        axios.get('/api/analytics/summary'),
-        axios.get('/api/analytics/charts?type=churn_distribution'),
-        axios.get('/api/analytics/charts?type=revenue_by_risk')
+        axios.get(`${config.getApiUrl()}/api/analytics/summary`),
+        axios.get(`${config.getApiUrl()}/api/analytics/charts?type=churn_distribution`),
+        axios.get(`${config.getApiUrl()}/api/analytics/charts?type=revenue_by_risk`)
       ]);
 
       setSummary(summaryRes.data);

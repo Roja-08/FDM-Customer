@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import config from '../config';
 import { 
   Card, 
   Form, 
@@ -35,7 +36,7 @@ const Predictions = () => {
       setLoading(true);
       setError(null);
       
-      const response = await axios.post('/api/predict', values);
+      const response = await axios.post(`${config.getApiUrl()}/api/predict`, values);
       setPrediction(response.data);
     } catch (err) {
       setError(err.response?.data?.error || 'Prediction failed');

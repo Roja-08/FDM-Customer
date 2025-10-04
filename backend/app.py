@@ -475,5 +475,7 @@ if __name__ == '__main__':
     init_db()
     print("🚀 Starting Flask backend server...")
     print("📊 E-Commerce Churn Analysis API")
-    print("🌐 Server running on http://localhost:8000")
-    app.run(debug=True, host='0.0.0.0', port=8000)
+    port = int(os.environ.get('PORT', 8000))
+    debug = os.environ.get('FLASK_ENV') != 'production'
+    print(f"🌐 Server running on port {port}")
+    app.run(debug=debug, host='0.0.0.0', port=port)

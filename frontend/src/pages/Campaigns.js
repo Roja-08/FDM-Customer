@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import config from '../config';
 import { 
   Card, 
   Table, 
@@ -48,7 +49,7 @@ const Campaigns = () => {
   const fetchCampaigns = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/campaigns');
+      const response = await axios.get(`${config.getApiUrl()}/api/campaigns`);
       setCampaigns(response.data);
     } catch (error) {
       message.error('Failed to fetch campaigns');

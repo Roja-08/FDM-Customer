@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import config from '../config';
 import { 
   Table, 
   Card, 
@@ -54,7 +55,7 @@ const Customers = () => {
         ...filters
       };
       
-      const response = await axios.get('/api/customers', { params });
+      const response = await axios.get(`${config.getApiUrl()}/api/customers`, { params });
       setCustomers(response.data.customers);
       setPagination(prev => ({
         ...prev,
@@ -88,7 +89,7 @@ const Customers = () => {
 
   const viewCustomer = async (customerId) => {
     try {
-      const response = await axios.get(`/api/customers/${customerId}`);
+      const response = await axios.get(`${config.getApiUrl()}/api/customers/${customerId}`);
       setSelectedCustomer(response.data);
       setModalVisible(true);
     } catch (error) {
