@@ -1,0 +1,27 @@
+{
+  "name": "ecommerce-churn-analysis",
+  "version": "1.0.0",
+  "description": "E-Commerce Customer Behavior Analysis & Recommendation System",
+  "main": "index.js",
+  "scripts": {
+    "build": "cd frontend && npm run build",
+    "start": "cd frontend && npm start",
+    "install-frontend": "cd frontend && npm install",
+    "install-backend": "cd backend && pip install -r requirements.txt",
+    "dev": "concurrently \"cd backend && python app.py\" \"cd frontend && npm start\"",
+    "postinstall": "npm run install-frontend"
+  },
+  "keywords": [
+    "ecommerce",
+    "churn-prediction",
+    "machine-learning",
+    "data-mining",
+    "react",
+    "flask"
+  ],
+  "author": "Group-04",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
