@@ -2,25 +2,25 @@
 # Group-04 - Fundamentals of Data Mining - SLIIT
 
 # Import all necessary libraries
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-import plotly.express as px
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
+import pandas as pd  # pyright: ignore[reportMissingImports]
+import numpy as np  # pyright: ignore[reportMissingImports]
+import matplotlib.pyplot as plt  # pyright: ignore[reportMissingImports]
+import seaborn as sns  # pyright: ignore[reportMissingModuleSource]
+import plotly.express as px  # pyright: ignore[reportMissingImports]
+import plotly.graph_objects as go  # pyright: ignore[reportMissingImports]
+from plotly.subplots import make_subplots  # pyright: ignore[reportMissingImports]
 from datetime import datetime, timedelta
 import warnings
 warnings.filterwarnings('ignore')
 
 # Machine Learning libraries
-from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.preprocessing import StandardScaler, LabelEncoder
-from sklearn.cluster import KMeans
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
-from sklearn.metrics import precision_score, recall_score, f1_score
+from sklearn.model_selection import train_test_split, cross_val_score  # pyright: ignore[reportMissingImports]
+from sklearn.preprocessing import StandardScaler, LabelEncoder  # pyright: ignore[reportMissingImports]
+from sklearn.cluster import KMeans  # pyright: ignore[reportMissingImports]
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier  # pyright: ignore[reportMissingImports]
+from sklearn.linear_model import LogisticRegression  # pyright: ignore[reportMissingImports]
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score  # pyright: ignore[reportMissingImports]
+from sklearn.metrics import precision_score, recall_score, f1_score  # pyright: ignore[reportMissingImports]
 import pickle
 
 print("🚀 Starting E-Commerce Churn Analysis System")

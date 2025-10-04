@@ -2,7 +2,7 @@
 # Group-04 - Fundamentals of Data Mining - SLIIT
 
 import sqlite3
-import pandas as pd
+import pandas as pd  # pyright: ignore[reportMissingImports]
 import os
 from datetime import datetime
 
