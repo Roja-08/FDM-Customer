@@ -4,8 +4,10 @@ services:
     env: python
     plan: free
     rootDir: backend
-    pythonVersion: 3.11.0
-    buildCommand: pip install -r requirements.txt
+    pythonVersion: 3.13.4
+    buildCommand: |
+      pip install --upgrade pip
+      pip install -r requirements.txt
     startCommand: python app.py
     envVars:
       - key: FLASK_ENV
@@ -15,4 +17,4 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: PYTHON_VERSION
-        value: 3.11.0
+        value: 3.13.4
