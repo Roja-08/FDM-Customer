@@ -66,7 +66,7 @@ const Customers = () => {
     } finally {
       setLoading(false);
     }
-  }, [pagination.current, pagination.pageSize, filters]);
+  }, [pagination, filters]);
 
   useEffect(() => {
     fetchCustomers();
