@@ -1,10 +1,15 @@
 services:
   - type: web
     name: ecommerce-churn-backend
-    env: docker
+    env: python
     plan: free
     rootDir: backend
-    dockerfilePath: ./Dockerfile
+    pythonVersion: 3.11.0
+    buildCommand: |
+      python -m pip install --upgrade pip
+      pip install --upgrade setuptools wheel
+      pip install -r requirements-minimal.txt
+    startCommand: python app.py
     envVars:
       - key: FLASK_ENV
         value: production
@@ -12,5 +17,5 @@ services:
         value: sqlite:///instance/database.db
       - key: SECRET_KEY
         generateValue: true
-      - key: PORT
-        value: 8000
+      - key: PYTHON_VERSION
+        value: 3.11.0
