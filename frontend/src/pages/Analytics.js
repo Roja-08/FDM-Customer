@@ -251,9 +251,11 @@ const Analytics = () => {
             borderRadius: '12px',
             boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
           }}
-          headStyle={{ 
-            background: 'linear-gradient(90deg, #f0f2f5 0%, #e6f7ff 100%)',
-            borderRadius: '12px 12px 0 0'
+          styles={{ 
+            header: {
+              background: 'linear-gradient(90deg, #f0f2f5 0%, #e6f7ff 100%)',
+              borderRadius: '12px 12px 0 0'
+            }
           }}
         >
           <div style={{ minHeight: '400px' }}>
@@ -274,9 +276,11 @@ const Analytics = () => {
                 borderRadius: '12px',
                 boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
               }}
-              headStyle={{ 
-                background: 'linear-gradient(90deg, #f0f2f5 0%, #f6ffed 100%)',
-                borderRadius: '12px 12px 0 0'
+              styles={{ 
+                header: {
+                  background: 'linear-gradient(90deg, #f0f2f5 0%, #f6ffed 100%)',
+                  borderRadius: '12px 12px 0 0'
+                }
               }}
             >
               <Row gutter={[16, 16]}>
@@ -327,9 +331,11 @@ const Analytics = () => {
                 borderRadius: '12px',
                 boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
               }}
-              headStyle={{ 
-                background: 'linear-gradient(90deg, #f0f2f5 0%, #fff7e6 100%)',
-                borderRadius: '12px 12px 0 0'
+              styles={{ 
+                header: {
+                  background: 'linear-gradient(90deg, #f0f2f5 0%, #fff7e6 100%)',
+                  borderRadius: '12px 12px 0 0'
+                }
               }}
             >
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '20px', padding: '20px 0' }}>
