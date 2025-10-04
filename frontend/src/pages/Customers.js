@@ -11,10 +11,26 @@ import {
   Descriptions, 
   Spin,
   Pagination,
-  message
+  message,
+  Typography,
+  Row,
+  Col,
+  Statistic,
+  Divider
 } from 'antd';
-import { SearchOutlined, EyeOutlined, FilterOutlined } from '@ant-design/icons';
+import { 
+  SearchOutlined, 
+  EyeOutlined, 
+  FilterOutlined,
+  UserOutlined,
+  DollarOutlined,
+  WarningOutlined,
+  CheckCircleOutlined,
+  ReloadOutlined
+} from '@ant-design/icons';
 import axios from 'axios';
+
+const { Title, Text } = Typography;
 
 const { Option } = Select;
 
@@ -172,113 +188,238 @@ const Customers = () => {
   ];
 
   return (
-    <div>
-      <Card>
-        <div style={{ marginBottom: '16px', display: 'flex', gap: '16px', alignItems: 'center' }}>
-          <Input.Search
-            placeholder="Search customers..."
-            style={{ width: 300 }}
-            onSearch={handleSearch}
-            enterButton={<SearchOutlined />}
-          />
-          <Select
-            placeholder="Filter by risk level"
-            style={{ width: 200 }}
-            allowClear
-            onChange={handleRiskFilter}
-          >
-            <Option value="High Risk">High Risk</Option>
-            <Option value="Medium Risk">Medium Risk</Option>
-            <Option value="Low Risk">Low Risk</Option>
-            <Option value="Stable">Stable</Option>
-          </Select>
-          <Button
-            icon={<FilterOutlined />}
-            onClick={fetchCustomers}
-          >
-            Refresh
-          </Button>
+    <div style={{ padding: '24px', background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)', minHeight: '100vh' }}>
+      <Space direction="vertical" size="large" style={{ width: '100%' }}>
+        <div>
+          <Title level={2} style={{ margin: 0, color: '#1890ff' }}>
+            <UserOutlined style={{ marginRight: '12px' }} />
+            Customer Management
+          </Title>
+          <Text type="secondary">Comprehensive customer data and churn risk analysis</Text>
         </div>
 
-        <Table
-          columns={columns}
-          dataSource={customers}
-          rowKey="id"
-          loading={loading}
-          pagination={{
-            current: pagination.current,
-            pageSize: pagination.pageSize,
-            total: pagination.total,
-            showSizeChanger: true,
-            showQuickJumper: true,
-            showTotal: (total, range) => 
-              `${range[0]}-${range[1]} of ${total} customers`,
-          }}
-          onChange={handleTableChange}
-          scroll={{ x: 1000 }}
-        />
-      </Card>
+        {/* Summary Stats */}
+        <Row gutter={[24, 24]}>
+          <Col xs={24} sm={8} lg={6}>
+            <Card 
+              hoverable
+              style={{ 
+                background: '#fff',
+                border: '1px solid #f0f0f0',
+                borderRadius: '16px',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)'
+              }}
+            >
+              <Statistic
+                title={<Text style={{ color: '#000', fontSize: '16px' }}>Total Customers</Text>}
+                value={pagination.total}
+                prefix={<UserOutlined style={{ color: '#1890ff' }} />}
+                valueStyle={{ color: '#000', fontSize: '24px', fontWeight: 'bold' }}
+              />
+            </Card>
+          </Col>
+          <Col xs={24} sm={8} lg={6}>
+            <Card 
+              hoverable
+              style={{ 
+                background: '#fff',
+                border: '1px solid #f0f0f0',
+                borderRadius: '16px',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)'
+              }}
+            >
+              <Statistic
+                title={<Text style={{ color: '#000', fontSize: '16px' }}>High Risk</Text>}
+                value={customers.filter(c => c.churn_risk === 'High Risk').length}
+                prefix={<WarningOutlined style={{ color: '#ff4d4f' }} />}
+                valueStyle={{ color: '#000', fontSize: '24px', fontWeight: 'bold' }}
+              />
+            </Card>
+          </Col>
+          <Col xs={24} sm={8} lg={6}>
+            <Card 
+              hoverable
+              style={{ 
+                background: '#fff',
+                border: '1px solid #f0f0f0',
+                borderRadius: '16px',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)'
+              }}
+            >
+              <Statistic
+                title={<Text style={{ color: '#000', fontSize: '16px' }}>Stable</Text>}
+                value={customers.filter(c => c.churn_risk === 'Stable').length}
+                prefix={<CheckCircleOutlined style={{ color: '#52c41a' }} />}
+                valueStyle={{ color: '#000', fontSize: '24px', fontWeight: 'bold' }}
+              />
+            </Card>
+          </Col>
+          <Col xs={24} sm={8} lg={6}>
+            <Card 
+              hoverable
+              style={{ 
+                background: '#fff',
+                border: '1px solid #f0f0f0',
+                borderRadius: '16px',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)'
+              }}
+            >
+              <Statistic
+                title={<Text style={{ color: '#000', fontSize: '16px' }}>Avg Order Value</Text>}
+                value={customers.reduce((sum, c) => sum + c.avg_order_value, 0) / customers.length || 0}
+                prefix={<DollarOutlined style={{ color: '#faad14' }} />}
+                precision={2}
+                valueStyle={{ color: '#000', fontSize: '24px', fontWeight: 'bold' }}
+              />
+            </Card>
+          </Col>
+        </Row>
 
-      <Modal
-        title="Customer Details"
-        open={modalVisible}
-        onCancel={() => setModalVisible(false)}
-        footer={null}
-        width={800}
-      >
-        {selectedCustomer && (
-          <Descriptions bordered column={2}>
-            <Descriptions.Item label="Customer ID" span={2}>
-              {selectedCustomer.customer_unique_id}
-            </Descriptions.Item>
-            <Descriptions.Item label="Location">
-              {selectedCustomer.customer_city}, {selectedCustomer.customer_state}
-            </Descriptions.Item>
-            <Descriptions.Item label="Zip Code">
-              {selectedCustomer.customer_zip_code_prefix}
-            </Descriptions.Item>
-            <Descriptions.Item label="Total Orders">
-              {selectedCustomer.total_orders}
-            </Descriptions.Item>
-            <Descriptions.Item label="Total Payment">
-              ${selectedCustomer.total_payment.toFixed(2)}
-            </Descriptions.Item>
-            <Descriptions.Item label="Avg Order Value">
-              ${selectedCustomer.avg_order_value.toFixed(2)}
-            </Descriptions.Item>
-            <Descriptions.Item label="Unique Products">
-              {selectedCustomer.unique_products}
-            </Descriptions.Item>
-            <Descriptions.Item label="Unique Categories">
-              {selectedCustomer.unique_categories}
-            </Descriptions.Item>
-            <Descriptions.Item label="Avg Review Score">
-              {selectedCustomer.avg_review_score.toFixed(2)}
-            </Descriptions.Item>
-            <Descriptions.Item label="Recency (Days)">
-              {selectedCustomer.recency_days}
-            </Descriptions.Item>
-            <Descriptions.Item label="Frequency">
-              {selectedCustomer.frequency}
-            </Descriptions.Item>
-            <Descriptions.Item label="Monetary Value">
-              ${selectedCustomer.monetary.toFixed(2)}
-            </Descriptions.Item>
-            <Descriptions.Item label="Churn Risk" span={2}>
-              {getRiskTag(selectedCustomer.churn_risk)}
-            </Descriptions.Item>
-            <Descriptions.Item label="Cluster">
-              {selectedCustomer.cluster}
-            </Descriptions.Item>
-            <Descriptions.Item label="Last Order Date">
-              {selectedCustomer.last_order_date ? 
-                new Date(selectedCustomer.last_order_date).toLocaleDateString() : 
-                'N/A'
-              }
-            </Descriptions.Item>
-          </Descriptions>
-        )}
-      </Modal>
+        <Card
+          title={
+            <Space>
+              <UserOutlined style={{ color: '#1890ff' }} />
+              <span>Customer Database</span>
+            </Space>
+          }
+          extra={
+            <Space wrap>
+              <Input.Search
+                placeholder="Search customers..."
+                style={{ width: 300 }}
+                onSearch={handleSearch}
+                enterButton={<SearchOutlined />}
+                size="large"
+              />
+              <Select
+                placeholder="Filter by risk level"
+                style={{ width: 200 }}
+                allowClear
+                onChange={handleRiskFilter}
+                size="large"
+              >
+                <Option value="High Risk">High Risk</Option>
+                <Option value="Medium Risk">Medium Risk</Option>
+                <Option value="Low Risk">Low Risk</Option>
+                <Option value="Stable">Stable</Option>
+              </Select>
+              <Button
+                icon={<ReloadOutlined />}
+                onClick={fetchCustomers}
+                size="large"
+              >
+                Refresh
+              </Button>
+            </Space>
+          }
+          style={{ 
+            borderRadius: '12px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+          }}
+          headStyle={{ 
+            background: 'linear-gradient(90deg, #f0f2f5 0%, #e6f7ff 100%)',
+            borderRadius: '12px 12px 0 0'
+          }}
+        >
+
+          <Table
+            columns={columns}
+            dataSource={customers}
+            rowKey="id"
+            loading={loading}
+            pagination={{
+              current: pagination.current,
+              pageSize: pagination.pageSize,
+              total: pagination.total,
+              showSizeChanger: true,
+              showQuickJumper: true,
+              showTotal: (total, range) => 
+                `${range[0]}-${range[1]} of ${total} customers`,
+            }}
+            onChange={handleTableChange}
+            scroll={{ x: 1000 }}
+            size="middle"
+          />
+        </Card>
+
+        <Modal
+          title={
+            <Space>
+              <UserOutlined style={{ color: '#1890ff' }} />
+              <span>Customer Details</span>
+            </Space>
+          }
+          open={modalVisible}
+          onCancel={() => setModalVisible(false)}
+          footer={null}
+          width={900}
+          style={{ top: 20 }}
+        >
+          {selectedCustomer && (
+            <div>
+              <div style={{ 
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                padding: '20px',
+                borderRadius: '8px',
+                marginBottom: '20px',
+                color: 'white'
+              }}>
+                <Title level={3} style={{ color: 'white', margin: 0 }}>
+                  {selectedCustomer.customer_unique_id}
+                </Title>
+                <Text style={{ color: 'rgba(255,255,255,0.8)' }}>
+                  {selectedCustomer.customer_city}, {selectedCustomer.customer_state}
+                </Text>
+                <div style={{ marginTop: '12px' }}>
+                  {getRiskTag(selectedCustomer.churn_risk)}
+                </div>
+              </div>
+              
+              <Descriptions bordered column={2} size="middle">
+                <Descriptions.Item label="Location" span={2}>
+                  {selectedCustomer.customer_city}, {selectedCustomer.customer_state} {selectedCustomer.customer_zip_code_prefix}
+                </Descriptions.Item>
+                <Descriptions.Item label="Total Orders">
+                  {selectedCustomer.total_orders}
+                </Descriptions.Item>
+                <Descriptions.Item label="Total Payment">
+                  ${selectedCustomer.total_payment.toFixed(2)}
+                </Descriptions.Item>
+                <Descriptions.Item label="Avg Order Value">
+                  ${selectedCustomer.avg_order_value.toFixed(2)}
+                </Descriptions.Item>
+                <Descriptions.Item label="Unique Products">
+                  {selectedCustomer.unique_products}
+                </Descriptions.Item>
+                <Descriptions.Item label="Unique Categories">
+                  {selectedCustomer.unique_categories}
+                </Descriptions.Item>
+                <Descriptions.Item label="Avg Review Score">
+                  {selectedCustomer.avg_review_score.toFixed(2)}
+                </Descriptions.Item>
+                <Descriptions.Item label="Recency (Days)">
+                  {selectedCustomer.recency_days}
+                </Descriptions.Item>
+                <Descriptions.Item label="Frequency">
+                  {selectedCustomer.frequency}
+                </Descriptions.Item>
+                <Descriptions.Item label="Monetary Value">
+                  ${selectedCustomer.monetary.toFixed(2)}
+                </Descriptions.Item>
+                <Descriptions.Item label="Cluster">
+                  {selectedCustomer.cluster}
+                </Descriptions.Item>
+                <Descriptions.Item label="Last Order Date">
+                  {selectedCustomer.last_order_date ? 
+                    new Date(selectedCustomer.last_order_date).toLocaleDateString() : 
+                    'N/A'
+                  }
+                </Descriptions.Item>
+              </Descriptions>
+            </div>
+          )}
+        </Modal>
+      </Space>
     </div>
   );
 };

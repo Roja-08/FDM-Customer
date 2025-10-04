@@ -12,10 +12,21 @@ import {
   Spin,
   Divider,
   Statistic,
-  Progress
+  Progress,
+  Typography,
+  Space,
+  Tag
 } from 'antd';
-import { ThunderboltOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import { 
+  ThunderboltOutlined, 
+  CheckCircleOutlined,
+  RobotOutlined,
+  BarChartOutlined,
+  BulbOutlined
+} from '@ant-design/icons';
 import axios from 'axios';
+
+const { Title, Text } = Typography;
 
 const Predictions = () => {
   const [form] = Form.useForm();
@@ -92,14 +103,38 @@ const Predictions = () => {
   };
 
   return (
-    <div>
-      <Card title="Customer Churn Prediction" style={{ marginBottom: '24px' }}>
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={onFinish}
-          className="prediction-form"
+    <div style={{ padding: '24px', background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)', minHeight: '100vh' }}>
+      <Space direction="vertical" size="large" style={{ width: '100%' }}>
+        <div>
+          <Title level={2} style={{ margin: 0, color: '#1890ff' }}>
+            <RobotOutlined style={{ marginRight: '12px' }} />
+            AI-Powered Churn Prediction
+          </Title>
+          <Text type="secondary">Predict customer churn risk using machine learning models</Text>
+        </div>
+
+        <Card 
+          title={
+            <Space>
+              <BarChartOutlined style={{ color: '#1890ff' }} />
+              <span>Customer Data Input</span>
+            </Space>
+          }
+          style={{ 
+            borderRadius: '12px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+          }}
+          headStyle={{ 
+            background: 'linear-gradient(90deg, #f0f2f5 0%, #e6f7ff 100%)',
+            borderRadius: '12px 12px 0 0'
+          }}
         >
+          <Form
+            form={form}
+            layout="vertical"
+            onFinish={onFinish}
+            className="prediction-form"
+          >
           <Row gutter={16}>
             <Col span={8}>
               <Form.Item
@@ -363,19 +398,29 @@ const Predictions = () => {
             </Col>
           </Row>
 
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              loading={loading}
-              icon={<ThunderboltOutlined />}
-              size="large"
-            >
-              Predict Churn Risk
-            </Button>
-          </Form.Item>
-        </Form>
-      </Card>
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={loading}
+                icon={<ThunderboltOutlined />}
+                size="large"
+                style={{ 
+                  background: 'linear-gradient(135deg, #1890ff 0%, #40a9ff 100%)',
+                  border: 'none',
+                  borderRadius: '12px',
+                  height: '48px',
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  boxShadow: '0 4px 16px rgba(24, 144, 255, 0.3)',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                Predict Churn Risk
+              </Button>
+            </Form.Item>
+          </Form>
+        </Card>
 
       {error && (
         <Alert
@@ -387,64 +432,151 @@ const Predictions = () => {
         />
       )}
 
-      {prediction && (
-        <Card title="Prediction Results">
-          <Result
-            icon={<CheckCircleOutlined style={{ color: getRiskColor(prediction.predicted_churn_risk) }} />}
+        {prediction && (
+          <Card 
             title={
-              <div style={{ fontSize: '24px', color: getRiskColor(prediction.predicted_churn_risk) }}>
-                {getRiskIcon(prediction.predicted_churn_risk)} {prediction.predicted_churn_risk}
-              </div>
+              <Space>
+                <CheckCircleOutlined style={{ color: '#52c41a' }} />
+                <span>Prediction Results</span>
+              </Space>
             }
-            subTitle={`Confidence: ${(prediction.confidence * 100).toFixed(1)}%`}
-          />
+            style={{ 
+              borderRadius: '12px',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+            }}
+            headStyle={{ 
+              background: 'linear-gradient(90deg, #f0f2f5 0%, #f6ffed 100%)',
+              borderRadius: '12px 12px 0 0'
+            }}
+          >
+            <div style={{ 
+              textAlign: 'center', 
+              padding: '40px 20px',
+                  background: '#fff',
+                  border: '1px solid #f0f0f0',
+              borderRadius: '12px',
+              marginBottom: '24px'
+            }}>
+              <div style={{ fontSize: '48px', marginBottom: '16px' }}>
+                {getRiskIcon(prediction.predicted_churn_risk)}
+              </div>
+              <Title level={1} style={{ 
+                color: getRiskColor(prediction.predicted_churn_risk),
+                margin: 0,
+                fontSize: '36px'
+              }}>
+                {prediction.predicted_churn_risk}
+              </Title>
+              <Text style={{ fontSize: '18px', color: '#666' }}>
+                Confidence: {(prediction.confidence * 100).toFixed(1)}%
+              </Text>
+            </div>
 
-          <Divider />
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Card title="Confidence Level" size="small">
-                <Progress
-                  type="circle"
-                  percent={Math.round(prediction.confidence * 100)}
-                  strokeColor={getRiskColor(prediction.predicted_churn_risk)}
-                />
-              </Card>
-            </Col>
-            <Col span={12}>
-              <Card title="Class Probabilities" size="small">
-                {Object.entries(prediction.class_probabilities).map(([className, probability]) => (
-                  <div key={className} style={{ marginBottom: '8px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span>{className}:</span>
-                      <span style={{ color: getRiskColor(className) }}>
-                        {(probability * 100).toFixed(1)}%
-                      </span>
-                    </div>
+            <Row gutter={[24, 24]}>
+              <Col xs={24} lg={12}>
+                <Card 
+                  title={
+                    <Space>
+                      <BarChartOutlined style={{ color: '#1890ff' }} />
+                      <span>Confidence Level</span>
+                    </Space>
+                  }
+                  style={{ 
+                    borderRadius: '8px',
+                  background: '#fff',
+                  border: '1px solid #f0f0f0',
+                  }}
+                >
+                  <div style={{ textAlign: 'center' }}>
                     <Progress
-                      percent={Math.round(probability * 100)}
-                      strokeColor={getRiskColor(className)}
-                      size="small"
+                      type="circle"
+                      percent={Math.round(prediction.confidence * 100)}
+                      strokeColor={getRiskColor(prediction.predicted_churn_risk)}
+                      size={120}
+                      strokeWidth={8}
                     />
                   </div>
+                </Card>
+              </Col>
+              <Col xs={24} lg={12}>
+                <Card 
+                  title={
+                    <Space>
+                      <BarChartOutlined style={{ color: '#52c41a' }} />
+                      <span>Class Probabilities</span>
+                    </Space>
+                  }
+                  style={{ 
+                    borderRadius: '8px',
+                  background: '#fff',
+                  border: '1px solid #f0f0f0',
+                  }}
+                >
+                  {Object.entries(prediction.class_probabilities).map(([className, probability]) => (
+                    <div key={className} style={{ marginBottom: '16px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                        <Tag color={getRiskColor(className)} style={{ fontSize: '12px' }}>
+                          {className}
+                        </Tag>
+                        <Text strong style={{ color: getRiskColor(className) }}>
+                          {(probability * 100).toFixed(1)}%
+                        </Text>
+                      </div>
+                      <Progress
+                        percent={Math.round(probability * 100)}
+                        strokeColor={getRiskColor(className)}
+                        size="small"
+                        showInfo={false}
+                      />
+                    </div>
+                  ))}
+                </Card>
+              </Col>
+            </Row>
+
+            <Divider />
+
+            <Card 
+              title={
+                <Space>
+                  <BulbOutlined style={{ color: '#faad14' }} />
+                  <span>Recommended Actions</span>
+                </Space>
+              }
+              style={{ 
+                borderRadius: '8px',
+                  background: '#fff',
+                  border: '1px solid #f0f0f0',
+              }}
+            >
+              <Row gutter={[16, 16]}>
+                {getRecommendations(prediction.predicted_churn_risk).map((action, index) => (
+                  <Col xs={24} sm={12} key={index}>
+                    <div style={{ 
+                      padding: '12px 16px',
+                      background: 'white',
+                      borderRadius: '6px',
+                      border: '1px solid #e8e8e8',
+                      display: 'flex',
+                      alignItems: 'center'
+                    }}>
+                      <div style={{ 
+                        width: '8px', 
+                        height: '8px', 
+                        borderRadius: '50%', 
+                        background: getRiskColor(prediction.predicted_churn_risk),
+                        marginRight: '12px',
+                        flexShrink: 0
+                      }} />
+                      <Text style={{ margin: 0 }}>{action}</Text>
+                    </div>
+                  </Col>
                 ))}
-              </Card>
-            </Col>
-          </Row>
-
-          <Divider />
-
-          <Card title="Recommended Actions" size="small">
-            <ul>
-              {getRecommendations(prediction.predicted_churn_risk).map((action, index) => (
-                <li key={index} style={{ marginBottom: '8px' }}>
-                  {action}
-                </li>
-              ))}
-            </ul>
+              </Row>
+            </Card>
           </Card>
-        </Card>
-      )}
+        )}
+      </Space>
     </div>
   );
 };

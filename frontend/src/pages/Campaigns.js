@@ -14,10 +14,23 @@ import {
   Statistic,
   Row,
   Col,
-  Progress
+  Progress,
+  Typography,
+  Divider
 } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined, TeamOutlined } from '@ant-design/icons';
+import { 
+  PlusOutlined, 
+  EditOutlined, 
+  DeleteOutlined, 
+  TeamOutlined,
+  FlagOutlined,
+  DollarOutlined,
+  UserOutlined,
+  CheckCircleOutlined
+} from '@ant-design/icons';
 import axios from 'axios';
+
+const { Title, Text } = Typography;
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -206,80 +219,147 @@ const Campaigns = () => {
     : 0;
 
   return (
-    <div>
-      <Row gutter={16} style={{ marginBottom: '24px' }}>
-        <Col span={6}>
-          <Card>
-            <Statistic
-              title="Total Campaigns"
-              value={totalCampaigns}
-              prefix={<TeamOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic
-              title="Active Campaigns"
-              value={activeCampaigns}
-              valueStyle={{ color: '#52c41a' }}
-            />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic
-              title="Target Customers"
-              value={totalTargetCustomers}
-            />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic
-              title="Engagement Rate"
-              value={overallEngagementRate}
-              suffix="%"
-              valueStyle={{ color: '#1890ff' }}
-            />
-          </Card>
-        </Col>
-      </Row>
+    <div style={{ padding: '24px', background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)', minHeight: '100vh' }}>
+      <Space direction="vertical" size="large" style={{ width: '100%' }}>
+        <div>
+          <Title level={2} style={{ margin: 0, color: '#1890ff' }}>
+            <FlagOutlined style={{ marginRight: '12px' }} />
+            Campaign Management
+          </Title>
+          <Text type="secondary">Create and manage customer retention campaigns</Text>
+        </div>
 
-      <Card
-        title="Campaign Management"
-        extra={
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={handleCreateCampaign}
-          >
-            Create Campaign
-          </Button>
-        }
-      >
-        <Table
-          columns={columns}
-          dataSource={campaigns}
-          rowKey="id"
-          loading={loading}
-          pagination={{
-            pageSize: 10,
-            showSizeChanger: true,
-            showQuickJumper: true,
-            showTotal: (total, range) => 
-              `${range[0]}-${range[1]} of ${total} campaigns`,
+        <Row gutter={[24, 24]}>
+          <Col xs={24} sm={12} lg={6}>
+            <Card 
+              hoverable
+              style={{ 
+                background: '#fff',
+                border: '1px solid #f0f0f0',
+                borderRadius: '16px',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)'
+              }}
+            >
+              <Statistic
+                title={<Text style={{ color: '#000', fontSize: '16px' }}>Total Campaigns</Text>}
+                value={totalCampaigns}
+                prefix={<TeamOutlined style={{ color: '#1890ff' }} />}
+                valueStyle={{ color: '#000', fontSize: '28px', fontWeight: 'bold' }}
+              />
+            </Card>
+          </Col>
+          <Col xs={24} sm={12} lg={6}>
+            <Card 
+              hoverable
+              style={{ 
+                background: '#fff',
+                border: '1px solid #f0f0f0',
+                borderRadius: '16px',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)'
+              }}
+            >
+              <Statistic
+                title={<Text style={{ color: '#000', fontSize: '16px' }}>Active Campaigns</Text>}
+                value={activeCampaigns}
+                prefix={<CheckCircleOutlined style={{ color: '#52c41a' }} />}
+                valueStyle={{ color: '#000', fontSize: '28px', fontWeight: 'bold' }}
+              />
+            </Card>
+          </Col>
+          <Col xs={24} sm={12} lg={6}>
+            <Card 
+              hoverable
+              style={{ 
+                background: '#fff',
+                border: '1px solid #f0f0f0',
+                borderRadius: '16px',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)'
+              }}
+            >
+              <Statistic
+                title={<Text style={{ color: '#000', fontSize: '16px' }}>Target Customers</Text>}
+                value={totalTargetCustomers}
+                prefix={<UserOutlined style={{ color: '#faad14' }} />}
+                valueStyle={{ color: '#000', fontSize: '28px', fontWeight: 'bold' }}
+              />
+            </Card>
+          </Col>
+          <Col xs={24} sm={12} lg={6}>
+            <Card 
+              hoverable
+              style={{ 
+                background: '#fff',
+                border: '1px solid #f0f0f0',
+                borderRadius: '16px',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)'
+              }}
+            >
+              <Statistic
+                title={<Text style={{ color: '#000', fontSize: '16px' }}>Engagement Rate</Text>}
+                value={overallEngagementRate}
+                suffix="%"
+                prefix={<DollarOutlined style={{ color: '#ff4d4f' }} />}
+                valueStyle={{ color: '#000', fontSize: '28px', fontWeight: 'bold' }}
+              />
+            </Card>
+          </Col>
+        </Row>
+
+        <Card
+          title={
+            <Space>
+              <FlagOutlined style={{ color: '#1890ff' }} />
+              <span>Campaign Management</span>
+            </Space>
+          }
+          extra={
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={handleCreateCampaign}
+              size="large"
+            >
+              Create Campaign
+            </Button>
+          }
+          style={{ 
+            borderRadius: '12px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
           }}
-        />
-      </Card>
+          headStyle={{ 
+            background: 'linear-gradient(90deg, #f0f2f5 0%, #e6f7ff 100%)',
+            borderRadius: '12px 12px 0 0'
+          }}
+        >
+          <Table
+            columns={columns}
+            dataSource={campaigns}
+            rowKey="id"
+            loading={loading}
+            pagination={{
+              pageSize: 10,
+              showSizeChanger: true,
+              showQuickJumper: true,
+              showTotal: (total, range) => 
+                `${range[0]}-${range[1]} of ${total} campaigns`,
+            }}
+            size="middle"
+          />
+        </Card>
 
-      <Modal
-        title={editingCampaign ? 'Edit Campaign' : 'Create Campaign'}
-        open={modalVisible}
-        onCancel={() => setModalVisible(false)}
-        onOk={() => form.submit()}
-        width={600}
-      >
+        <Modal
+          title={
+            <Space>
+              <FlagOutlined style={{ color: '#1890ff' }} />
+              <span>{editingCampaign ? 'Edit Campaign' : 'Create Campaign'}</span>
+            </Space>
+          }
+          open={modalVisible}
+          onCancel={() => setModalVisible(false)}
+          onOk={() => form.submit()}
+          width={700}
+          style={{ top: 20 }}
+        >
         <Form
           form={form}
           layout="vertical"
@@ -370,7 +450,8 @@ const Campaigns = () => {
             </Select>
           </Form.Item>
         </Form>
-      </Modal>
+        </Modal>
+      </Space>
     </div>
   );
 };

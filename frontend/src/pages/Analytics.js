@@ -7,7 +7,11 @@ import {
   DatePicker, 
   Button,
   Spin,
-  Alert
+  Alert,
+  Typography,
+  Space,
+  Divider,
+  Tag
 } from 'antd';
 import { 
   BarChart, 
@@ -26,8 +30,16 @@ import {
   Area,
   AreaChart
 } from 'recharts';
-import { FundOutlined, BarChartOutlined, PieChartOutlined } from '@ant-design/icons';
+import { 
+  BarChartOutlined, 
+  PieChartOutlined,
+  LineChartOutlined,
+  ReloadOutlined,
+  FilterOutlined
+} from '@ant-design/icons';
 import axios from 'axios';
+
+const { Title, Text } = Typography;
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -48,16 +60,14 @@ const Analytics = () => {
       setLoading(true);
       setError(null);
 
-      const [churnRes, revenueRes, geoRes] = await Promise.all([
+      const [churnRes, revenueRes] = await Promise.all([
         axios.get('/api/analytics/charts?type=churn_distribution'),
-        axios.get('/api/analytics/charts?type=revenue_by_risk'),
-        axios.get('/api/analytics/charts?type=geographic_distribution')
+        axios.get('/api/analytics/charts?type=revenue_by_risk')
       ]);
 
       setChartData({
         churn: churnRes.data,
-        revenue: revenueRes.data,
-        geographic: geoRes.data
+        revenue: revenueRes.data
       });
     } catch (err) {
       setError('Failed to load analytics data');
@@ -132,24 +142,6 @@ const Analytics = () => {
     );
   };
 
-  const renderGeographicChart = () => {
-    const data = chartData.geographic?.labels?.map((label, index) => ({
-      state: label,
-      customers: chartData.geographic.data[index]
-    })) || [];
-
-    return (
-      <ResponsiveContainer width="100%" height={400}>
-        <BarChart data={data} layout="horizontal">
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis type="number" />
-          <YAxis dataKey="state" type="category" width={100} />
-          <Tooltip />
-          <Bar dataKey="customers" fill="#1890ff" />
-        </BarChart>
-      </ResponsiveContainer>
-    );
-  };
 
   const renderTrendChart = () => {
     // Mock trend data - in real app, this would come from API
@@ -185,8 +177,6 @@ const Analytics = () => {
         return renderChurnDistributionChart();
       case 'revenue_analysis':
         return renderRevenueChart();
-      case 'geographic_distribution':
-        return renderGeographicChart();
       case 'trend_analysis':
         return renderTrendChart();
       default:
@@ -208,84 +198,181 @@ const Analytics = () => {
   }
 
   return (
-    <div>
-      <Card
-        title="Analytics Dashboard"
-        extra={
-          <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-            <Select
-              value={selectedChart}
-              onChange={setSelectedChart}
-              style={{ width: 200 }}
-            >
-              <Option value="churn_distribution">
-                <PieChartOutlined /> Churn Distribution
-              </Option>
-              <Option value="revenue_analysis">
-                <BarChartOutlined /> Revenue Analysis
-              </Option>
-              <Option value="geographic_distribution">
-                <FundOutlined /> Geographic Distribution
-              </Option>
-              <Option value="trend_analysis">
-                <BarChartOutlined /> Trend Analysis
-              </Option>
-            </Select>
-            <RangePicker
-              onChange={setDateRange}
-              placeholder={['Start Date', 'End Date']}
-            />
-            <Button type="primary" onClick={fetchAnalyticsData}>
-              Refresh
-            </Button>
-          </div>
-        }
-      >
-        {renderSelectedChart()}
-      </Card>
+    <div style={{ padding: '24px', background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)', minHeight: '100vh' }}>
+      <Space direction="vertical" size="large" style={{ width: '100%' }}>
+        <div>
+          <Title level={2} style={{ margin: 0, color: '#1890ff' }}>
+            <LineChartOutlined style={{ marginRight: '12px' }} />
+            Analytics Dashboard
+          </Title>
+          <Text type="secondary">Advanced data visualization and insights</Text>
+        </div>
 
-      <Row gutter={16} style={{ marginTop: '24px' }}>
-        <Col span={12}>
-          <Card title="Quick Stats" size="small">
-            <Row gutter={16}>
-              <Col span={12}>
-                <div style={{ textAlign: 'center', padding: '16px' }}>
-                  <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#ff4d4f' }}>
-                    {chartData.churn?.data?.reduce((sum, val) => sum + val, 0) || 0}
-                  </div>
-                  <div style={{ color: '#666' }}>Total Customers</div>
-                </div>
-              </Col>
-              <Col span={12}>
-                <div style={{ textAlign: 'center', padding: '16px' }}>
-                  <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#faad14' }}>
-                    {chartData.revenue?.total_revenue?.reduce((sum, val) => sum + val, 0).toFixed(0) || 0}
-                  </div>
-                  <div style={{ color: '#666' }}>Total Revenue ($)</div>
-                </div>
-              </Col>
-            </Row>
-          </Card>
-        </Col>
-        <Col span={12}>
-          <Card title="Risk Distribution" size="small">
-            <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-              {chartData.churn?.labels?.map((label, index) => (
-                <div key={label} style={{ textAlign: 'center' }}>
+        <Card
+          title={
+            <Space>
+              <BarChartOutlined style={{ color: '#1890ff' }} />
+              <span>Interactive Analytics</span>
+            </Space>
+          }
+          extra={
+            <Space wrap>
+              <Select
+                value={selectedChart}
+                onChange={setSelectedChart}
+                style={{ width: 220 }}
+                size="large"
+              >
+                <Option value="churn_distribution">
+                  <PieChartOutlined style={{ marginRight: '8px' }} />
+                  Churn Distribution
+                </Option>
+                <Option value="revenue_analysis">
+                  <BarChartOutlined style={{ marginRight: '8px' }} />
+                  Revenue Analysis
+                </Option>
+                <Option value="trend_analysis">
+                  <LineChartOutlined style={{ marginRight: '8px' }} />
+                  Trend Analysis
+                </Option>
+              </Select>
+              <RangePicker
+                onChange={setDateRange}
+                placeholder={['Start Date', 'End Date']}
+                size="large"
+                style={{ width: 280 }}
+              />
+              <Button 
+                type="primary" 
+                onClick={fetchAnalyticsData}
+                icon={<ReloadOutlined />}
+                size="large"
+              >
+                Refresh
+              </Button>
+            </Space>
+          }
+          style={{ 
+            borderRadius: '12px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+          }}
+          headStyle={{ 
+            background: 'linear-gradient(90deg, #f0f2f5 0%, #e6f7ff 100%)',
+            borderRadius: '12px 12px 0 0'
+          }}
+        >
+          <div style={{ minHeight: '400px' }}>
+            {renderSelectedChart()}
+          </div>
+        </Card>
+
+        <Row gutter={[24, 24]}>
+          <Col xs={24} lg={12}>
+            <Card 
+              title={
+                <Space>
+                  <BarChartOutlined style={{ color: '#52c41a' }} />
+                  <span>Quick Stats</span>
+                </Space>
+              }
+              style={{ 
+                borderRadius: '12px',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+              }}
+              headStyle={{ 
+                background: 'linear-gradient(90deg, #f0f2f5 0%, #f6ffed 100%)',
+                borderRadius: '12px 12px 0 0'
+              }}
+            >
+              <Row gutter={[16, 16]}>
+                <Col span={12}>
                   <div style={{ 
-                    fontSize: '20px', 
-                    fontWeight: 'bold', 
-                    color: getRiskColor(label) 
+                    textAlign: 'center', 
+                    padding: '24px',
+                    background: '#fff',
+                    borderRadius: '16px',
+                    border: '1px solid #f0f0f0',
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+                    transition: 'all 0.3s ease'
                   }}>
-                    {chartData.churn.data[index]}
+                    <div style={{ fontSize: '28px', fontWeight: '700', marginBottom: '8px', color: '#1890ff' }}>
+                      {chartData.churn?.data?.reduce((sum, val) => sum + val, 0) || 0}
+                    </div>
+                    <div style={{ fontSize: '14px', color: '#8c8c8c', fontWeight: '500' }}>Total Customers</div>
                   </div>
-                  <div style={{ color: '#666', fontSize: '12px' }}>{label}</div>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </Col>
-      </Row>
+                </Col>
+                <Col span={12}>
+                  <div style={{ 
+                    textAlign: 'center', 
+                    padding: '24px',
+                    background: '#fff',
+                    borderRadius: '16px',
+                    border: '1px solid #f0f0f0',
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+                    transition: 'all 0.3s ease'
+                  }}>
+                    <div style={{ fontSize: '28px', fontWeight: '700', marginBottom: '8px', color: '#52c41a' }}>
+                      ${chartData.revenue?.total_revenue?.reduce((sum, val) => sum + val, 0).toFixed(0) || 0}
+                    </div>
+                    <div style={{ fontSize: '14px', color: '#8c8c8c', fontWeight: '500' }}>Total Revenue</div>
+                  </div>
+                </Col>
+              </Row>
+            </Card>
+          </Col>
+          <Col xs={24} lg={12}>
+            <Card 
+              title={
+                <Space>
+                  <PieChartOutlined style={{ color: '#faad14' }} />
+                  <span>Risk Distribution</span>
+                </Space>
+              }
+              style={{ 
+                borderRadius: '12px',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+              }}
+              headStyle={{ 
+                background: 'linear-gradient(90deg, #f0f2f5 0%, #fff7e6 100%)',
+                borderRadius: '12px 12px 0 0'
+              }}
+            >
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '20px', padding: '20px 0' }}>
+                {chartData.churn?.labels?.map((label, index) => (
+                  <div key={label} style={{ 
+                    textAlign: 'center',
+                    padding: '24px 20px',
+                    background: '#fff',
+                    borderRadius: '16px',
+                    border: `1px solid ${getRiskColor(label)}20`,
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+                    transition: 'all 0.3s ease',
+                    cursor: 'pointer'
+                  }}>
+                    <div style={{ 
+                      fontSize: '24px', 
+                      fontWeight: '700', 
+                      color: getRiskColor(label),
+                      marginBottom: '8px'
+                    }}>
+                      {chartData.churn.data[index]}
+                    </div>
+                    <div style={{ 
+                      fontSize: '12px',
+                      color: '#8c8c8c',
+                      fontWeight: '500',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.5px'
+                    }}>
+                      {label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </Col>
+        </Row>
+      </Space>
     </div>
   );
 };
