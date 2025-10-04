@@ -1,7 +1,7 @@
 # E-Commerce Churn Analysis - Flask Backend
 # Group-04 - Fundamentals of Data Mining - SLIIT
 
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
@@ -92,7 +92,18 @@ class Campaign(db.Model):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return jsonify({
+        "message": "E-Commerce Churn Analysis API",
+        "version": "1.0.0",
+        "status": "running",
+        "endpoints": {
+            "health": "/api/health",
+            "customers": "/api/customers",
+            "analytics": "/api/analytics",
+            "predictions": "/api/predictions",
+            "campaigns": "/api/campaigns"
+        }
+    })
 
 @app.route('/api/health', methods=['GET'])
 def health_check():
