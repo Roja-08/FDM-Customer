@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ecommerce-churn-backend"
+version = "1.0.0"
+description = "E-Commerce Customer Churn Analysis Backend API"
+requires-python = ">=3.8"
+dependencies = [
+    "Flask",
+    "Flask-CORS",
+    "Flask-SQLAlchemy", 
+    "pandas",
+    "numpy",
+    "scikit-learn",
+    "joblib",
+    "python-dateutil",
+    "gunicorn"
+]
+
+[project.scripts]
+start = "app:app"
