@@ -3,7 +3,6 @@ import { Layout, Menu } from 'antd';
 import { 
   DashboardOutlined, 
   UserOutlined, 
-  BarChartOutlined, 
   ThunderboltOutlined, 
   FundOutlined,
   TeamOutlined

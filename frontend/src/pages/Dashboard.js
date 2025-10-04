@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Card, Statistic, Spin, Alert, Typography, Space, Divider, Tag } from 'antd';
+import { Row, Col, Card, Spin, Alert, Typography, Space, Tag } from 'antd';
 import { 
   UserOutlined, 
   DollarOutlined, 
@@ -46,7 +46,6 @@ const Dashboard = () => {
     }
   };
 
-  const COLORS = ['#ff4d4f', '#faad14', '#52c41a', '#1890ff'];
 
   const getRiskColor = (risk) => {
     switch (risk) {

@@ -9,9 +9,7 @@ import {
   Spin,
   Alert,
   Typography,
-  Space,
-  Divider,
-  Tag
+  Space
 } from 'antd';
 import { 
   BarChart, 
@@ -25,8 +23,6 @@ import {
   PieChart,
   Pie,
   Cell,
-  LineChart,
-  Line,
   Area,
   AreaChart
 } from 'recharts';
@@ -34,8 +30,7 @@ import {
   BarChartOutlined, 
   PieChartOutlined,
   LineChartOutlined,
-  ReloadOutlined,
-  FilterOutlined
+  ReloadOutlined
 } from '@ant-design/icons';
 import axios from 'axios';
 
@@ -87,7 +82,6 @@ const Analytics = () => {
     }
   };
 
-  const COLORS = ['#ff4d4f', '#faad14', '#52c41a', '#1890ff'];
 
   const renderChurnDistributionChart = () => {
     const data = chartData.churn?.labels?.map((label, index) => ({

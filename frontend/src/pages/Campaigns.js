@@ -15,8 +15,7 @@ import {
   Row,
   Col,
   Progress,
-  Typography,
-  Divider
+  Typography
 } from 'antd';
 import { 
   PlusOutlined, 

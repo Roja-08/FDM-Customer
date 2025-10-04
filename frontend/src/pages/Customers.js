@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Table, 
   Card, 
@@ -9,19 +9,15 @@ import {
   Tag, 
   Modal, 
   Descriptions, 
-  Spin,
-  Pagination,
   message,
   Typography,
   Row,
   Col,
-  Statistic,
-  Divider
+  Statistic
 } from 'antd';
 import { 
   SearchOutlined, 
   EyeOutlined, 
-  FilterOutlined,
   UserOutlined,
   DollarOutlined,
   WarningOutlined,
@@ -49,11 +45,7 @@ const Customers = () => {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
-  useEffect(() => {
-    fetchCustomers();
-  }, [pagination.current, pagination.pageSize, filters]);
-
-  const fetchCustomers = async () => {
+  const fetchCustomers = useCallback(async () => {
     try {
       setLoading(true);
       const params = {
@@ -74,7 +66,11 @@ const Customers = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [pagination.current, pagination.pageSize, filters]);
+
+  useEffect(() => {
+    fetchCustomers();
+  }, [fetchCustomers]);
 
   const handleTableChange = (pagination) => {
     setPagination(pagination);
