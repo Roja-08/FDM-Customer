@@ -59,3 +59,36 @@ Thumbs.db
 # Large files
 *.log
 *.tmp
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Frontend build
+frontend/build/
+frontend/dist/
+
+# Backend instance
+backend/instance/
+
+# Model files
+*.pkl
+*.joblib
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Image files
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+
+# Keep only the main CSV file
+*.csv
+!customer_features_with_churn_labels.csv
