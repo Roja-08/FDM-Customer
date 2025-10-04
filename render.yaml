@@ -5,9 +5,7 @@ services:
     plan: free
     rootDir: backend
     pythonVersion: 3.13.4
-    buildCommand: |
-      pip install --upgrade pip
-      pip install -r requirements.txt
+    buildCommand: ./build.sh
     startCommand: python app.py
     envVars:
       - key: FLASK_ENV
