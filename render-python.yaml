@@ -1,10 +1,14 @@
 services:
   - type: web
-    name: ecommerce-churn-backend
-    env: docker
+    name: ecommerce-churn-backend-python
+    env: python
     plan: free
     rootDir: backend
-    dockerfilePath: ./Dockerfile
+    buildCommand: |
+      pip install --upgrade pip
+      pip install --upgrade setuptools wheel
+      pip install -r requirements-basic.txt
+    startCommand: python app.py
     envVars:
       - key: FLASK_ENV
         value: production
