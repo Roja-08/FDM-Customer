@@ -3,8 +3,8 @@ const config = {
   // Development API URL (for local development)
   development: 'http://localhost:8000',
   
-  // Production API URL (fallback if env not provided)
-  production: 'https://ecommerce-churn-backend.onrender.com',
+  // In production, prefer Netlify proxy (same-origin) to avoid CORS
+  productionDefault: '/api',
   
   // Get current API URL with env override support
   getApiUrl: () => {
@@ -13,7 +13,7 @@ const config = {
       return envUrl.trim();
     }
     if (process.env.NODE_ENV === 'production') {
-      return config.production;
+      return config.productionDefault;
     }
     return config.development;
   }

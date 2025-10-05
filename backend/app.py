@@ -15,7 +15,14 @@ import sqlite3
 
 # Initialize Flask app
 app = Flask(__name__)
-CORS(app)
+# Restrict CORS to the deployed Netlify domain and preflight for /api/* routes
+CORS(
+    app,
+    resources={r"/api/*": {"origins": [
+        "https://fdm-customer-analysis.netlify.app",
+        "https://*.netlify.app"
+    ]}},
+)
 
 # Database configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///churn_analysis.db'
