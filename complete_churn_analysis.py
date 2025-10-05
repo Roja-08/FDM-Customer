@@ -2,9 +2,9 @@
 # Group-04 - Fundamentals of Data Mining - SLIIT
 
 # Import all necessary libraries
-import pandas as pd  # pyright: ignore[reportMissingImports]
+import pandas as pd  # pyright: ignore[reportMissingModuleSource, reportMissingImports]
 import numpy as np  # pyright: ignore[reportMissingImports]
-import matplotlib.pyplot as plt  # pyright: ignore[reportMissingImports]
+import matplotlib.pyplot as plt  # pyright: ignore[reportMissingModuleSource, reportMissingImports]
 import seaborn as sns  # pyright: ignore[reportMissingModuleSource]
 import plotly.express as px  # pyright: ignore[reportMissingImports]
 import plotly.graph_objects as go  # pyright: ignore[reportMissingImports]
@@ -14,13 +14,13 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # Machine Learning libraries
-from sklearn.model_selection import train_test_split, cross_val_score  # pyright: ignore[reportMissingImports]
-from sklearn.preprocessing import StandardScaler, LabelEncoder  # pyright: ignore[reportMissingImports]
-from sklearn.cluster import KMeans  # pyright: ignore[reportMissingImports]
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier  # pyright: ignore[reportMissingImports]
-from sklearn.linear_model import LogisticRegression  # pyright: ignore[reportMissingImports]
-from sklearn.metrics import classification_report, confusion_matrix, accuracy_score  # pyright: ignore[reportMissingImports]
-from sklearn.metrics import precision_score, recall_score, f1_score  # pyright: ignore[reportMissingImports]
+from sklearn.model_selection import train_test_split, cross_val_score  # pyright: ignore[reportMissingModuleSource, reportMissingImports]
+from sklearn.preprocessing import StandardScaler, LabelEncoder  # pyright: ignore[reportMissingModuleSource, reportMissingImports]
+from sklearn.cluster import KMeans  # pyright: ignore[reportMissingModuleSource, reportMissingImports]
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier  # pyright: ignore[reportMissingModuleSource, reportMissingImports]
+from sklearn.linear_model import LogisticRegression  # pyright: ignore[reportMissingModuleSource, reportMissingImports]
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score  # pyright: ignore[reportMissingModuleSource, reportMissingImports]
+from sklearn.metrics import precision_score, recall_score, f1_score  # pyright: ignore[reportMissingModuleSource, reportMissingImports]
 import pickle
 
 print("🚀 Starting E-Commerce Churn Analysis System")
@@ -273,41 +273,41 @@ for risk_level in ['High Risk', 'Medium Risk', 'Low Risk', 'Stable']:
 print("✅ Churn labels created successfully!")
 
 # 7. EXPLORATORY DATA ANALYSIS
-print("\n📊 STEP 7: Creating visualizations...")
+#print("\n📊 STEP 7: Creating visualizations...")
 
 # Set up plotting style
-plt.style.use('default')
-sns.set_palette("Set2")
+#plt.style.use('default')
+#sns.set_palette("Set2")
 
 # Create comprehensive visualizations
-fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(16, 12))
-fig.suptitle('E-Commerce Customer Churn Analysis - Overview', fontsize=16, fontweight='bold')
+#fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(16, 12))
+#fig.suptitle('E-Commerce Customer Churn Analysis - Overview', fontsize=16, fontweight='bold')
 
 # 1. Churn distribution pie chart
-churn_counts = customer_features['churn_risk'].value_counts()
-colors = ['#ff6b6b', '#ffa726', '#66bb6a', '#42a5f5']
-ax1.pie(churn_counts.values, labels=churn_counts.index, autopct='%1.1f%%', 
-        colors=colors, startangle=90)
-ax1.set_title('Customer Churn Risk Distribution', fontweight='bold')
+#churn_counts = customer_features['churn_risk'].value_counts()
+#colors = ['#ff6b6b', '#ffa726', '#66bb6a', '#42a5f5']
+#ax1.pie(churn_counts.values, labels=churn_counts.index, autopct='%1.1f%%', 
+ #       colors=colors, startangle=90)
+#ax1.set_title('Customer Churn Risk Distribution', fontweight='bold')
 
 # 2. RFM distribution by churn risk
-sns.boxplot(data=customer_features, x='churn_risk', y='recency_days', ax=ax2)
-ax2.set_title('Recency Distribution by Churn Risk', fontweight='bold')
-ax2.tick_params(axis='x', rotation=45)
+#sns.boxplot(data=customer_features, x='churn_risk', y='recency_days', ax=ax2)
+#ax2.set_title('Recency Distribution by Churn Risk', fontweight='bold')
+#ax2.tick_params(axis='x', rotation=45)
 
-sns.boxplot(data=customer_features, x='churn_risk', y='frequency', ax=ax3)
-ax3.set_title('Frequency Distribution by Churn Risk', fontweight='bold')
-ax3.tick_params(axis='x', rotation=45)
+#sns.boxplot(data=customer_features, x='churn_risk', y='frequency', ax=ax3)
+#ax3.set_title('Frequency Distribution by Churn Risk', fontweight='bold')
+#ax3.tick_params(axis='x', rotation=45)
 
-sns.boxplot(data=customer_features, x='churn_risk', y='monetary', ax=ax4)
-ax4.set_title('Monetary Value Distribution by Churn Risk', fontweight='bold')
-ax4.tick_params(axis='x', rotation=45)
+#sns.boxplot(data=customer_features, x='churn_risk', y='monetary', ax=ax4)
+#ax4.set_title('Monetary Value Distribution by Churn Risk', fontweight='bold')
+#ax4.tick_params(axis='x', rotation=45)
 
-plt.tight_layout()
-plt.savefig('churn_analysis_overview.png', dpi=300, bbox_inches='tight')
-plt.show()
+#plt.tight_layout()
+#plt.savefig('churn_analysis_overview.png', dpi=300, bbox_inches='tight')
+#plt.show()
 
-print("✅ Overview visualizations created!")
+#print("✅ Overview visualizations created!")
 
 # 8. CUSTOMER SEGMENTATION
 print("\n🎯 STEP 8: Performing customer segmentation...")
@@ -341,7 +341,7 @@ print(cluster_summary.round(2))
 # 9. MACHINE LEARNING MODEL PREPARATION
 print("\n🔧 STEP 9: Preparing features for machine learning...")
 
-# Select features for modeling
+# Select features for modeling (exclude 'cluster' to avoid leakage)
 feature_columns = [
     'recency_days', 'frequency', 'monetary',
     'avg_order_value', 'unique_products', 'unique_categories',
@@ -349,8 +349,7 @@ feature_columns = [
     'customer_lifetime_days', 'avg_days_between_orders',
     'avg_review_score', 'total_review_comments',
     'avg_payment_methods', 'max_installments',
-    'total_freight', 'avg_freight', 'std_payment',
-    'cluster'
+    'total_freight', 'avg_freight', 'std_payment'
 ]
 
 # Create feature matrix
@@ -367,14 +366,15 @@ print("\n🏷️ Label Mapping:")
 for label, code in label_mapping.items():
     print(f"{label}: {code}")
 
-# Feature scaling
-scaler_ml = StandardScaler()
-X_scaled = scaler_ml.fit_transform(X)
-
-# Split data
+# Split data BEFORE scaling to prevent test leakage
 X_train, X_test, y_train, y_test = train_test_split(
-    X_scaled, y, test_size=0.2, random_state=42, stratify=y
+    X, y, test_size=0.2, random_state=42, stratify=y
 )
+
+# Fit scaler on training set only, then transform both sets
+scaler_ml = StandardScaler()
+X_train = scaler_ml.fit_transform(X_train)
+X_test = scaler_ml.transform(X_test)
 
 print(f"\n📊 Dataset Split:")
 print(f"Training set: {X_train.shape[0]:,} samples")

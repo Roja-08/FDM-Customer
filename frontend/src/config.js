@@ -4,7 +4,7 @@ const config = {
   development: 'http://localhost:8000',
   
   // Production API URL (for deployed backend on Render)
-  production: 'https://fdm-customer.onrender.com',
+  production: 'https://ecommerce-churn-backend.onrender.com',
   
   // Get current API URL based on environment
   getApiUrl: () => {

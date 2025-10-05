@@ -67,7 +67,7 @@ const Customers = () => {
     } finally {
       setLoading(false);
     }
-  }, [pagination.current, pagination.pageSize, filters.search, filters.risk_level]);
+  }, [pagination, filters]);
 
   useEffect(() => {
     fetchCustomers();

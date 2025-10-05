@@ -180,8 +180,8 @@ def get_customer(customer_id):
         'monetary': customer.monetary,
         'churn_risk': customer.churn_risk,
         'cluster': customer.cluster,
-        'created_at': customer.created_at.isoformat(),
-        'updated_at': customer.updated_at.isoformat()
+        'created_at': customer.created_at.isoformat() if customer.created_at else None,
+        'updated_at': customer.updated_at.isoformat() if customer.updated_at else None
     })
 
 @app.route('/api/predict', methods=['POST'])
