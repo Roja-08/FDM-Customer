@@ -1,8 +1,7 @@
 // API Configuration
 const config = {
-  // Development API URL (for local development)
+  // Hard default for local development
   development: 'http://localhost:8000',
-  
   // In production, prefer Netlify proxy (same-origin). Keep empty so
   // `${getApiUrl()}/api/...` resolves to `/api/...`
   productionDefault: '',
@@ -13,10 +12,15 @@ const config = {
     if (envUrl && envUrl.trim()) {
       return envUrl.trim();
     }
-    if (process.env.NODE_ENV === 'production') {
-      return config.productionDefault;
+    const isLocal = typeof window !== 'undefined' && (
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1'
+    );
+    if (isLocal) {
+      return config.development;
     }
-    return config.development;
+    // Default for Netlify/production: use same-origin proxy
+    return config.productionDefault;
   }
 };
 
