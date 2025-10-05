@@ -3,8 +3,9 @@ const config = {
   // Development API URL (for local development)
   development: 'http://localhost:8000',
   
-  // In production, prefer Netlify proxy (same-origin) to avoid CORS
-  productionDefault: '/api',
+  // In production, prefer Netlify proxy (same-origin). Keep empty so
+  // `${getApiUrl()}/api/...` resolves to `/api/...`
+  productionDefault: '',
   
   // Get current API URL with env override support
   getApiUrl: () => {
