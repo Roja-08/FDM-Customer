@@ -15,12 +15,14 @@ import sqlite3
 
 # Initialize Flask app
 app = Flask(__name__)
-# Restrict CORS to the deployed Netlify domain and preflight for /api/* routes
+# Allow CORS for Netlify (production) and localhost (development) on /api/* routes
 CORS(
     app,
     resources={r"/api/*": {"origins": [
         "https://fdm-customer-analysis.netlify.app",
-        "https://*.netlify.app"
+        "https://*.netlify.app",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000"
     ]}},
 )
 
