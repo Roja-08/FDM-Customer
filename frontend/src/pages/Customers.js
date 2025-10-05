@@ -67,7 +67,7 @@ const Customers = () => {
     } finally {
       setLoading(false);
     }
-  }, [pagination, filters]);
+  }, [pagination.current, pagination.pageSize, filters.search, filters.risk_level]);
 
   useEffect(() => {
     fetchCustomers();
@@ -89,11 +89,29 @@ const Customers = () => {
 
   const viewCustomer = async (customerId) => {
     try {
+      console.log('Fetching customer details for ID:', customerId);
       const response = await axios.get(`${config.getApiUrl()}/api/customers/${customerId}`);
-      setSelectedCustomer(response.data);
+      console.log('Customer details response:', response.data);
+      
+      // Handle null values and ensure all required fields are present
+      const customerData = {
+        ...response.data,
+        customer_city: response.data.customer_city || 'N/A',
+        customer_state: response.data.customer_state || 'N/A',
+        customer_zip_code_prefix: response.data.customer_zip_code_prefix || 'N/A',
+        last_order_date: response.data.last_order_date || null,
+        first_order_date: response.data.first_order_date || null,
+        avg_review_score: response.data.avg_review_score || 0,
+        unique_products: response.data.unique_products || 0,
+        unique_categories: response.data.unique_categories || 0,
+        cluster: response.data.cluster || 0
+      };
+      
+      setSelectedCustomer(customerData);
       setModalVisible(true);
     } catch (error) {
-      message.error('Failed to fetch customer details');
+      console.error('Error fetching customer details:', error);
+      message.error(`Failed to fetch customer details: ${error.response?.data?.message || error.message}`);
     }
   };
 
@@ -118,7 +136,11 @@ const Customers = () => {
     {
       title: 'Location',
       key: 'location',
-      render: (_, record) => `${record.customer_city}, ${record.customer_state}`,
+      render: (_, record) => {
+        const city = record.customer_city || 'N/A';
+        const state = record.customer_state || 'N/A';
+        return `${city}, ${state}`;
+      },
       width: 150,
     },
     {
@@ -367,7 +389,7 @@ const Customers = () => {
                   {selectedCustomer.customer_unique_id}
                 </Title>
                 <Text style={{ color: 'rgba(255,255,255,0.8)' }}>
-                  {selectedCustomer.customer_city}, {selectedCustomer.customer_state}
+                  {selectedCustomer.customer_city || 'N/A'}, {selectedCustomer.customer_state || 'N/A'}
                 </Text>
                 <div style={{ marginTop: '12px' }}>
                   {getRiskTag(selectedCustomer.churn_risk)}
@@ -376,7 +398,7 @@ const Customers = () => {
               
               <Descriptions bordered column={2} size="middle">
                 <Descriptions.Item label="Location" span={2}>
-                  {selectedCustomer.customer_city}, {selectedCustomer.customer_state} {selectedCustomer.customer_zip_code_prefix}
+                  {selectedCustomer.customer_city || 'N/A'}, {selectedCustomer.customer_state || 'N/A'} {selectedCustomer.customer_zip_code_prefix || ''}
                 </Descriptions.Item>
                 <Descriptions.Item label="Total Orders">
                   {selectedCustomer.total_orders}

@@ -97,12 +97,14 @@ const Dashboard = () => {
                 position: 'relative',
                 overflow: 'hidden'
               }}
-              bodyStyle={{ 
-                padding: '24px',
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center'
+              styles={{ 
+                body: {
+                  padding: '24px',
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center'
+                }
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '12px' }}>
@@ -134,12 +136,14 @@ const Dashboard = () => {
                 position: 'relative',
                 overflow: 'hidden'
               }}
-              bodyStyle={{ 
-                padding: '24px',
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center'
+              styles={{ 
+                body: {
+                  padding: '24px',
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center'
+                }
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '12px' }}>
@@ -171,12 +175,14 @@ const Dashboard = () => {
                 position: 'relative',
                 overflow: 'hidden'
               }}
-              bodyStyle={{ 
-                padding: '24px',
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center'
+              styles={{ 
+                body: {
+                  padding: '24px',
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center'
+                }
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '12px' }}>
@@ -208,12 +214,14 @@ const Dashboard = () => {
                 position: 'relative',
                 overflow: 'hidden'
               }}
-              bodyStyle={{ 
-                padding: '24px',
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center'
+              styles={{ 
+                body: {
+                  padding: '24px',
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center'
+                }
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '12px' }}>
