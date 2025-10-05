@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import config from '../config';
 import { 
   Table, 
@@ -45,29 +45,33 @@ const Customers = () => {
   });
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [refreshKey, setRefreshKey] = useState(0);
+
+  const fetchCustomers = useCallback(async () => {
+    try {
+      setLoading(true);
+      const params = {
+        page: pagination.current,
+        per_page: pagination.pageSize,
+        ...filters
+      };
+      
+      const response = await axios.get(`${config.getApiUrl()}/api/customers`, { params });
+      setCustomers(response.data.customers);
+      setPagination(prev => ({
+        ...prev,
+        total: response.data.total
+      }));
+    } catch (error) {
+      message.error('Failed to fetch customers');
+      console.error('Error fetching customers:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [pagination, filters]);
 
   useEffect(() => {
-    const fetchCustomers = async () => {
-      try {
-        setLoading(true);
-        const params = {
-          page: pagination.current,
-          per_page: pagination.pageSize,
-          ...filters
-        };
-        const response = await axios.get(`${config.getApiUrl()}/api/customers`, { params });
-        setCustomers(response.data.customers);
-        setPagination(prev => ({ ...prev, total: response.data.total }));
-      } catch (error) {
-        message.error('Failed to fetch customers');
-        console.error('Error fetching customers:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchCustomers();
-  }, [pagination, filters, refreshKey]);
+  }, [fetchCustomers]);
 
   const handleTableChange = (pagination) => {
     setPagination(pagination);
@@ -320,7 +324,7 @@ const Customers = () => {
               </Select>
               <Button
                 icon={<ReloadOutlined />}
-                onClick={() => setRefreshKey(key => key + 1)}
+                onClick={fetchCustomers}
                 size="large"
               >
                 Refresh
