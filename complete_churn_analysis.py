@@ -445,6 +445,46 @@ class_names = label_encoder.classes_
 print("\n📋 Detailed Classification Report:")
 print(classification_report(y_test, best_predictions, target_names=class_names))
 
+# Confusion Matrix
+print("\n🔍 Creating Confusion Matrix...")
+cm = confusion_matrix(y_test, best_predictions)
+
+# Create confusion matrix visualization
+plt.figure(figsize=(10, 8))
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
+            xticklabels=class_names, yticklabels=class_names,
+            cbar_kws={'label': 'Number of Predictions'})
+plt.title(f'Confusion Matrix - {best_model_name}', fontsize=16, fontweight='bold')
+plt.xlabel('Predicted Churn Risk', fontsize=12, fontweight='bold')
+plt.ylabel('Actual Churn Risk', fontsize=12, fontweight='bold')
+plt.xticks(rotation=45)
+plt.yticks(rotation=0)
+plt.tight_layout()
+
+# Save confusion matrix
+plt.savefig('confusion_matrix.png', dpi=300, bbox_inches='tight')
+plt.show()
+
+print("✅ Confusion Matrix created and saved as 'confusion_matrix.png'")
+
+# Display confusion matrix statistics
+print("\n📊 Confusion Matrix Analysis:")
+total_predictions = cm.sum()
+correct_predictions = cm.diagonal().sum()
+overall_accuracy = correct_predictions / total_predictions
+
+print(f"Total Predictions: {total_predictions:,}")
+print(f"Correct Predictions: {correct_predictions:,}")
+print(f"Overall Accuracy: {overall_accuracy:.4f} ({overall_accuracy*100:.2f}%)")
+
+# Per-class accuracy
+print("\n📈 Per-Class Accuracy:")
+for i, class_name in enumerate(class_names):
+    class_total = cm[i, :].sum()
+    class_correct = cm[i, i]
+    class_accuracy = class_correct / class_total if class_total > 0 else 0
+    print(f"{class_name:12}: {class_correct:>4}/{class_total:<4} ({class_accuracy:.4f})")
+
 # 11. BUSINESS INTELLIGENCE ANALYSIS
 print("\n💡 STEP 11: Generating business insights...")
 
@@ -613,6 +653,7 @@ print("• churn_prediction_model.pkl - Trained ML model")
 print("• customer_features_with_churn_labels.csv - Processed dataset")
 print("• analysis_results.pkl - Complete analysis results")
 print("• churn_analysis_overview.png - Visualization dashboard")
+print("• confusion_matrix.png - Model performance confusion matrix")
 
 print("\n🎉 E-COMMERCE CHURN ANALYSIS SYSTEM COMPLETED SUCCESSFULLY!")
 print("Group-04 - Fundamentals of Data Mining - SLIIT")

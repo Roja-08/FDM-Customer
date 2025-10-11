@@ -23,7 +23,8 @@ import {
   DollarOutlined,
   WarningOutlined,
   CheckCircleOutlined,
-  ReloadOutlined
+  ReloadOutlined,
+  DownloadOutlined
 } from '@ant-design/icons';
 import axios from 'axios';
 
@@ -46,13 +47,13 @@ const Customers = () => {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const fetchCustomers = useCallback(async () => {
+  const fetchCustomers = useCallback(async (page = 1, pageSize = 50, searchFilters = { search: '', risk_level: '' }) => {
     try {
       setLoading(true);
       const params = {
-        page: pagination.current,
-        per_page: pagination.pageSize,
-        ...filters
+        page: page,
+        per_page: pageSize,
+        ...searchFilters
       };
       
       const response = await axios.get(`${config.getApiUrl()}/api/customers`, { params });
@@ -67,24 +68,87 @@ const Customers = () => {
     } finally {
       setLoading(false);
     }
-  }, [pagination, filters]);
+  }, []);
 
   useEffect(() => {
     fetchCustomers();
   }, [fetchCustomers]);
 
-  const handleTableChange = (pagination) => {
-    setPagination(pagination);
+  const handleTableChange = (newPagination) => {
+    setPagination(newPagination);
+    fetchCustomers(newPagination.current, newPagination.pageSize, filters);
   };
 
   const handleSearch = (value) => {
-    setFilters(prev => ({ ...prev, search: value }));
+    const newFilters = { ...filters, search: value };
+    setFilters(newFilters);
     setPagination(prev => ({ ...prev, current: 1 }));
+    fetchCustomers(1, pagination.pageSize, newFilters);
   };
 
   const handleRiskFilter = (value) => {
-    setFilters(prev => ({ ...prev, risk_level: value }));
+    const newFilters = { ...filters, risk_level: value };
+    setFilters(newFilters);
     setPagination(prev => ({ ...prev, current: 1 }));
+    fetchCustomers(1, pagination.pageSize, newFilters);
+  };
+
+  const exportToCSV = () => {
+    try {
+      // Prepare CSV headers
+      const headers = [
+        'Customer ID',
+        'Location',
+        'Total Orders',
+        'Total Payment',
+        'Avg Order Value',
+        'Recency (Days)',
+        'Churn Risk',
+        'Frequency',
+        'Monetary Value',
+        'Unique Products',
+        'Unique Categories',
+        'Avg Review Score'
+      ];
+
+      // Prepare CSV data
+      const csvData = customers.map(customer => [
+        customer.customer_unique_id || '',
+        `${customer.customer_city || 'N/A'}, ${customer.customer_state || 'N/A'}`,
+        customer.total_orders || 0,
+        customer.total_payment || 0,
+        customer.avg_order_value || 0,
+        customer.recency_days || 0,
+        customer.churn_risk || '',
+        customer.frequency || 0,
+        customer.monetary || 0,
+        customer.unique_products || 0,
+        customer.unique_categories || 0,
+        customer.avg_review_score || 0
+      ]);
+
+      // Create CSV content
+      const csvContent = [
+        headers.join(','),
+        ...csvData.map(row => row.map(field => `"${field}"`).join(','))
+      ].join('\n');
+
+      // Create and download file
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `customers_export_${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      message.success('Customer data exported successfully!');
+    } catch (error) {
+      message.error('Failed to export customer data');
+      console.error('Export error:', error);
+    }
   };
 
   const viewCustomer = async (customerId) => {
@@ -323,8 +387,21 @@ const Customers = () => {
                 <Option value="Stable">Stable</Option>
               </Select>
               <Button
+                icon={<DownloadOutlined />}
+                onClick={exportToCSV}
+                size="large"
+                type="primary"
+                style={{ 
+                  background: 'linear-gradient(135deg, #52c41a 0%, #73d13d 100%)',
+                  border: 'none',
+                  borderRadius: '8px'
+                }}
+              >
+                Export CSV
+              </Button>
+              <Button
                 icon={<ReloadOutlined />}
-                onClick={fetchCustomers}
+                onClick={() => fetchCustomers(pagination.current, pagination.pageSize, filters)}
                 size="large"
               >
                 Refresh
